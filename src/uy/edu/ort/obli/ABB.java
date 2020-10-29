@@ -3,6 +3,7 @@ package uy.edu.ort.obli;
 public class ABB<T extends Comparable<T>> {
 
     private NodoABB<T> raiz;
+    private String listadoStr;
 
     public ABB(NodoABB<T> raiz) {
         this.raiz = raiz;
@@ -11,7 +12,11 @@ public class ABB<T extends Comparable<T>> {
     public ABB() {
 
     }
-
+    public boolean esVacio(){
+     if (raiz==null)
+         return true;
+     return false;
+    }
     public boolean pertenece(T dato) {
         return perteneceRec(dato, raiz);
     }
@@ -46,18 +51,35 @@ public class ABB<T extends Comparable<T>> {
             return buscarRec(dato, nodo.getDer(), conteo);
         }
     }
-
-    public void listarAsc() {
-        listarAscRec(raiz);
+    public String listarAscStr(){
+    listadoStr="";
+    if (esVacio()){
+     return listadoStr;   
+    }
+    listarAscStrRec(raiz);
+    return listadoStr;
+   }
+   
+   private void listarAscStrRec(NodoABB<T> nodo){
+       //in-order
+    if (nodo != null){
+        listarAscStrRec(nodo.getIzq());
+        listadoStr += nodo.getDato().toString()+"|";
+        listarAscStrRec(nodo.getDer());
+    }
+   }
+    public String listarAsc() {
+       return listarAscRec(raiz,"");
     }
 
-    private void listarAscRec(NodoABB<T> nodo) {
+    private String listarAscRec(NodoABB<T> nodo,String StrLista) {
         //in-order
         if (nodo != null) {
-            listarAscRec(nodo.getIzq());
-            System.out.println(nodo.getDato());
-            listarAscRec(nodo.getDer());
+            listarAscRec(nodo.getIzq(),StrLista);
+            StrLista += nodo.getDato().toString()+"|";
+            listarAscRec(nodo.getDer(),StrLista);
         }
+        return StrLista;
     }
 
     public void listarDsc() {

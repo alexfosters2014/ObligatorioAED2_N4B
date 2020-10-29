@@ -57,7 +57,9 @@ public class Sistema implements ISistema {
 
     @Override
     public Retorno listarUsuarios() {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+         Retorno retorno = new Retorno(Resultado.OK);
+             retorno.valorString=usuarios.listarAscStr();
+             return retorno;
     }
 
     @Override
