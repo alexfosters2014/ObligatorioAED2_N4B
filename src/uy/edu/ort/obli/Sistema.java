@@ -1,5 +1,7 @@
 package uy.edu.ort.obli;
 
+import ArbolBinario.*;
+
 import uy.edu.ort.obli.Retorno.Resultado;
 
 public class Sistema implements ISistema {

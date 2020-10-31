@@ -1,4 +1,4 @@
-package uy.edu.ort.obli;
+package ArbolBinario;
 
 public class NodoABB<T> {
 
