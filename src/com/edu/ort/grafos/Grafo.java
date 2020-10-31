@@ -77,7 +77,6 @@ public class Grafo {
     }
 
     private int buscarPos(Punto destino) {
-
         for (int i = 0; i < tope; i++) {
             if (destino.equals(vertices[i])) {
                 return i;
@@ -129,7 +128,7 @@ public class Grafo {
                 dfsRec(i, visitados);
             }
         }
-    }
+    }  
 
     //busqueda por amplitud
     public void bfs(Punto punto) {
