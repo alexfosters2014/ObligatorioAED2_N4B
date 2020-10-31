@@ -94,6 +94,10 @@ public class Grafo {
     public boolean existeVertice(Punto origen) {
         return buscarPos(origen) != -1;
     }
+    public Punto buscarVertice(double coordX, double coordY) {
+        
+        buscarPos(origen) != -1;
+    }
 
     public void borrarArista(Punto origen, Punto destino) {
         int posOrigen = buscarPos(origen);

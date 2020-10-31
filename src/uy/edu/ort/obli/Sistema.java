@@ -100,7 +100,13 @@ public class Sistema implements ISistema {
     
     @Override
     public Retorno registrarTramo(double coordXi, double coordYi, double coordXf, double coordYf, int metros) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+      Retorno retorno = new Retorno(Resultado.OK);
+        Punto puntoOrigen=miMapa.
+      
+      
+      
+      
+      
     }
 
     @Override
