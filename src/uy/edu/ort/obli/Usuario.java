@@ -3,13 +3,15 @@ package uy.edu.ort.obli;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import listas.ListaSE;
 
 public class Usuario implements Comparable<Usuario> {
 
     private String nombre;
     private String email;
     private String password;
-
+    private ListaSE<Direccion> direcciones;
+    
     public String getNombre() {
         return nombre;
     }
@@ -22,6 +24,7 @@ public class Usuario implements Comparable<Usuario> {
         this.nombre = nombre;
         this.email = mail;
         this.password = password;
+        this.direcciones=new ListaSE<Direccion>();
     }
 
     public void setNombre(String nombre) {

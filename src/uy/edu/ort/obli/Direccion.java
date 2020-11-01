@@ -1,14 +1,12 @@
+package uy.edu.ort.obli;
 
-package com.edu.ort.grafos;
+public class Direccion {
 
-import java.util.Objects;
-
-public abstract class Punto {
     private double coordX;
     private double coordY;
-    private boolean ocupado;
+    private int repeticiones;
 
-    public Punto(double coordX, double coordY) {
+    public Direccion(double coordX, double coordY) {
         this.coordX = coordX;
         this.coordY = coordY;
     }
@@ -31,16 +29,8 @@ public abstract class Punto {
 
     @Override
     public int hashCode() {
-        int hash = 3;
+        int hash = 7;
         return hash;
-    }
-
-    public boolean isOcupado() {
-        return ocupado;
-    }
-
-    public void setOcupado(boolean ocupado) {
-        this.ocupado = ocupado;
     }
 
     @Override
@@ -54,7 +44,7 @@ public abstract class Punto {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Punto other = (Punto) obj;
+        final Direccion other = (Direccion) obj;
         if (Double.doubleToLongBits(this.coordX) != Double.doubleToLongBits(other.coordX)) {
             return false;
         }
@@ -63,9 +53,5 @@ public abstract class Punto {
         }
         return true;
     }
-    
-    public abstract String QuienSoy();
-    public boolean estoyEnCoordenadas(double MicoordX, double MicoordY){
-        return (coordX == MicoordX && coordY == MicoordY);
-    }
+
 }
