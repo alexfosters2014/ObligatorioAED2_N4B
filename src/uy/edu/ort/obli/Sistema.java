@@ -99,15 +99,30 @@ public class Sistema implements ISistema {
     }
     
     @Override
-    public Retorno registrarTramo(double coordXi, double coordYi, double coordXf, double coordYf, int metros) {
+    public Retorno registrarTramo(double coordXi, double coordYi, double coordXf, double coordYf, int metros,int minutos) {
       Retorno retorno = new Retorno(Resultado.OK);
         Punto puntoOrigen=miMapa.buscarVertice(coordXi, coordYi);
-        Punto putnoDestino=miMapa.buscarVertice(coordXf, coordYf);
+        Punto puntoDestino=miMapa.buscarVertice(coordXf, coordYf);
         
         if (metros<=0){
-            
+            retorno.resultado=Resultado.ERROR_1;
+            return retorno;
         }
-      
+         if (minutos<=0){
+            retorno.resultado=Resultado.ERROR_2;
+            return retorno;
+        }
+          if (puntoOrigen == null && puntoDestino == null){
+            retorno.resultado=Resultado.ERROR_3;
+            return retorno;
+        }
+            if (miMapa.existeArista(puntoOrigen, puntoDestino)){
+            retorno.resultado=Resultado.ERROR_4;
+            return retorno;
+        }
+            //tengo que ver como agregarArista del delivery que es no dirigo
+            miMapa.agregarArista(puntoOrigen, puntoDestino, metros, minutos);
+            return retorno;
     }
 
     @Override

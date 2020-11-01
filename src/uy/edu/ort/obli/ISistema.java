@@ -21,7 +21,7 @@ public interface ISistema {
 	 Retorno registrarMovil(String matricula, Double coordX, Double coordY);
 
 	 Retorno registrarTramo(double coordXi, double coordYi, double
-			 coordXf, double coordYf, int metros);
+			 coordXf, double coordYf, int metros,int minutos);
 	 
 	 Retorno movilMasCercano(Double coordXi, Double coordYi);
 

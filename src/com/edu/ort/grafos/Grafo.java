@@ -169,7 +169,7 @@ public class Grafo {
          }
           
     }
-    //algoritmo para encontrar arbol de recubrimiento minimo
+    //algoritmo para encontrar arbol de recubrimiento minimo ,tiene que ser no dirigido
     public void prim(boolean metrosTrue_DistanciaFalse){
         int metrosDistancia;
         int pos= posConVertice();
