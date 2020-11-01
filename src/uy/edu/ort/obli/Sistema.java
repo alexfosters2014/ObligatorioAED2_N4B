@@ -101,43 +101,44 @@ public class Sistema implements ISistema {
     @Override
     public Retorno registrarTramo(double coordXi, double coordYi, double coordXf, double coordYf, int metros) {
       Retorno retorno = new Retorno(Resultado.OK);
-        Punto puntoOrigen=miMapa.
-      
-      
-      
-      
+        Punto puntoOrigen=miMapa.buscarVertice(coordXi, coordYi);
+        Punto putnoDestino=miMapa.buscarVertice(coordXf, coordYf);
+        
+        if (metros<=0){
+            
+        }
       
     }
 
     @Override
-    public Retorno registrarDelivery(String cedula, double coordX, double coordY) {
+    public Retorno registrarDelivery(String cedula, Double coordX, Double coordY) {
         Punto nuevoDelivery =new Delivery(coordX, coordY, cedula);
        return RegistroPunto(nuevoDelivery);
     }
 
     @Override
-    public Retorno registrarMovil(String matricula, double coordX, double coordY) {
+    public Retorno registrarMovil(String matricula, Double coordX, Double coordY) {
         Punto nuevoMovil =new Movil(coordX, coordY, matricula);
        return RegistroPunto(nuevoMovil);
     }
 
     @Override
-    public Retorno movilMasCercano(double coordXi, double coordYi) {
+    public Retorno movilMasCercano(Double coordXi, Double coordYi) {
         return new Retorno(Resultado.NO_IMPLEMENTADA);
     }
 
     @Override
-    public Retorno deliveryMasCercano(double coordXi, double coordYi) {
+    public Retorno deliveryMasCercano(Double coordXi, Double coordYi) {
         return new Retorno(Resultado.NO_IMPLEMENTADA);
     }
 
     @Override
-    public Retorno caminoMinimoMovil(double coordXi, double coordYi, double coordXf, double coordYf) {
+    public Retorno caminoMinimoMovil(Double coordXi, Double coordYi, Double coordXf, Double coordYf) {
         return new Retorno(Resultado.NO_IMPLEMENTADA);
     }
 
     @Override
-    public Retorno caminoMinimoDelivery(double coordXi, double coordYi, double coordXf, double coordYf) {
+    public Retorno caminoMinimoDelivery(Double coordXi, Double coordYi, Double coordXf, Double coordYf) {
         return new Retorno(Resultado.NO_IMPLEMENTADA);
     }
 

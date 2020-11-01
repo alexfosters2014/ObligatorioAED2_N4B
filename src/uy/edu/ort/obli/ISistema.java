@@ -16,20 +16,20 @@ public interface ISistema {
 	 
 	 Retorno registrarEsquina(double coordX, double coordY);
 	 
-	 Retorno registrarDelivery(String cedula, double coordX, double coordY);
+	 Retorno registrarDelivery(String cedula, Double coordX, Double coordY);
 	 
-	 Retorno registrarMovil(String matricula, double coordX, double coordY);
+	 Retorno registrarMovil(String matricula, Double coordX, Double coordY);
 
 	 Retorno registrarTramo(double coordXi, double coordYi, double
 			 coordXf, double coordYf, int metros);
 	 
-	 Retorno movilMasCercano(double coordXi, double coordYi);
+	 Retorno movilMasCercano(Double coordXi, Double coordYi);
 
-	 Retorno deliveryMasCercano(double coordXi, double coordYi);
+	 Retorno deliveryMasCercano(Double coordXi, Double coordYi);
 	 
-	 Retorno caminoMinimoMovil(double coordXi, double coordYi, double coordXf, double coordYf);
+	 Retorno caminoMinimoMovil(Double coordXi, Double coordYi, Double coordXf, Double coordYf);
 	 
-	 Retorno caminoMinimoDelivery(double coordXi, double coordYi, double coordXf, double coordYf);
+	 Retorno caminoMinimoDelivery(Double coordXi, Double coordYi, Double coordXf, Double coordYf);
 	 
 	 Retorno dibujarMapa();
 	

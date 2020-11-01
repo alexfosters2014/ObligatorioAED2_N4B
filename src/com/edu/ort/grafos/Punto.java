@@ -56,5 +56,7 @@ public abstract class Punto {
     }
     
     public abstract String QuienSoy();
-    
+    public boolean estoyEnCoordenadas(double MicoordX, double MicoordY){
+        return (coordX == MicoordX && coordY == MicoordY);
+    }
 }

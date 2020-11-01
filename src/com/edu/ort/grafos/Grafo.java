@@ -84,6 +84,15 @@ public class Grafo {
         }
         return -1;
     }
+    
+    private int buscarPos(double coordX, double coordY) {
+        for (int i = 0; i < tope; i++) {
+            if (vertices[i].estoyEnCoordenadas(coordX, coordY)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     public boolean existeArista(Punto origen, Punto destino) {
         int posOrigen = buscarPos(origen);
@@ -95,8 +104,11 @@ public class Grafo {
         return buscarPos(origen) != -1;
     }
     public Punto buscarVertice(double coordX, double coordY) {
-        
-        buscarPos(origen) != -1;
+        int pos=buscarPos(coordX, coordY);
+        if (pos==-1){
+            return null;
+        }
+        return vertices[pos];
     }
 
     public void borrarArista(Punto origen, Punto destino) {
