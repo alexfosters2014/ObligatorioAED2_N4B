@@ -127,7 +127,7 @@ public class Grafo {
         }
 
     }
-    //busqueda por prfundidad
+    //mostrar busqueda por prfundidad
 
     public void dfs(Punto origen) {
         int posOrigen = buscarPos(origen);
