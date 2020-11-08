@@ -17,6 +17,10 @@ public class Usuario implements Comparable<Usuario> {
         return nombre;
     }
 
+    public ListaSEOrd<Direccion> getDirecciones() {
+        return direcciones;
+    }
+
     public Usuario(String mail) {
         this.email = mail;
     }

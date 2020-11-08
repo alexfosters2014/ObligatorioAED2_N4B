@@ -7,6 +7,7 @@ import com.edu.ort.grafos.Esquina;
 import com.edu.ort.grafos.Grafo;
 import com.edu.ort.grafos.Movil;
 import com.edu.ort.grafos.Punto;
+import listas.Direccion;
 
 import uy.edu.ort.obli.Retorno.Resultado;
 
@@ -14,11 +15,11 @@ public class Sistema implements ISistema {
 
     ABB<Usuario> usuarios = new ABB<Usuario>();
     Grafo miMapa;
-    
+
     @Override
     public Retorno inicializarSistema(int maxPuntos) {
         Retorno retorno = new Retorno(Resultado.OK);
-        miMapa=new Grafo(maxPuntos);
+        miMapa = new Grafo(maxPuntos);
         return retorno;
     }
 
@@ -47,97 +48,109 @@ public class Sistema implements ISistema {
 
     @Override
     public Retorno buscarUsuario(String email) {
-          Retorno retorno = new Retorno(Resultado.OK);
+        Retorno retorno = new Retorno(Resultado.OK);
 
-         Usuario usuario=new Usuario(email);
-         Usuario usuarioBuscado;
-         
-         if (!usuario.ValidarEmail()){
-            retorno.resultado=Resultado.ERROR_1;
+        Usuario usuario = new Usuario(email);
+
+        if (!usuario.ValidarEmail()) {
+            retorno.resultado = Resultado.ERROR_1;
             return retorno;
         }
-         Entero ent = new Entero();
-         usuarioBuscado = usuarios.buscar(usuario,ent);
-       if (usuarioBuscado == null){
-            retorno.resultado=Resultado.ERROR_2;
+        Entero ent = new Entero();
+        Usuario usuarioBuscado = usuarios.buscar(usuario, ent);
+        if (usuarioBuscado == null) {
+            retorno.resultado = Resultado.ERROR_2;
             return retorno;
         }
-       retorno.valorString = usuarioBuscado.toString();
-       retorno.valorEntero = ent.numero;
-       return retorno;
+        retorno.valorString = usuarioBuscado.toString();
+        retorno.valorEntero = ent.numero;
+        return retorno;
     }
 
     @Override
     public Retorno listarUsuarios() {
-         Retorno retorno = new Retorno(Resultado.OK);
-                newString listado= new newString();
-                usuarios.listarAsc(listado);
-             retorno.valorString = listado.dato;
-             return retorno;
+        Retorno retorno = new Retorno(Resultado.OK);
+        newString listado = new newString();
+        usuarios.listarAsc(listado);
+        retorno.valorString = listado.dato;
+        return retorno;
     }
 
     @Override
     public Retorno direccionesDeUsuario(String email) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        Retorno retorno = new Retorno(Resultado.OK);
+        Usuario usuario = new Usuario(email);
+        if (!usuario.ValidarEmail()) {
+            retorno.resultado = Resultado.ERROR_1;
+            return retorno;
+        }
+        Usuario usuarioBuscado = usuarios.buscar(usuario, new Entero());
+        if (usuarioBuscado == null) {
+            retorno.resultado = Resultado.ERROR_2;
+            return retorno;
+        }
+        for (Direccion dir : usuarioBuscado.getDirecciones()){
+            retorno.valorString+=dir.getPunto().getCoordX() + ";" + dir.getPunto().getCoordY() + "|";
+        }
+        return retorno;
     }
 
     @Override
     public Retorno registrarEsquina(double coordX, double coordY) {
-       Punto nuevaEsquina =new Esquina(coordX, coordY);
-       return RegistroPunto(nuevaEsquina);
+        Punto nuevaEsquina = new Esquina(coordX, coordY);
+        return RegistroPunto(nuevaEsquina);
     }
+
     //metodo auxiliar para registrar puntos
-    private Retorno RegistroPunto(Punto punto){
+    private Retorno RegistroPunto(Punto punto) {
         Retorno retorno = new Retorno(Resultado.OK);
-      if (miMapa.esLleno()){
-         retorno.resultado=Resultado.ERROR_1;
-       }
-      else if (miMapa.existeVertice(punto)){
-         retorno.resultado=Resultado.ERROR_2;
-       }   
-      else{
-          miMapa.agregarVertice(punto);
-      }
-       return retorno;
+        if (miMapa.esLleno()) {
+            retorno.resultado = Resultado.ERROR_1;
+        } else if (miMapa.existeVertice(punto)) {
+            retorno.resultado = Resultado.ERROR_2;
+        } else {
+            miMapa.agregarVertice(punto);
+        }
+        return retorno;
     }
-    
+
     @Override
-    public Retorno registrarTramo(double coordXi, double coordYi, double coordXf, double coordYf, int metros,int minutos) {
-      Retorno retorno = new Retorno(Resultado.OK);
-        Punto puntoOrigen=miMapa.buscarVertice(coordXi, coordYi);
-        Punto puntoDestino=miMapa.buscarVertice(coordXf, coordYf);
-        
-        if (metros<=0){
-            retorno.resultado=Resultado.ERROR_1;
+    public Retorno registrarTramo(double coordXi, double coordYi, double coordXf, double coordYf, int metros, int minutos) {
+        Retorno retorno = new Retorno(Resultado.OK);
+        Punto puntoOrigen = miMapa.buscarVertice(coordXi, coordYi);
+        Punto puntoDestino = miMapa.buscarVertice(coordXf, coordYf);
+
+        if (metros <= 0) {
+            retorno.resultado = Resultado.ERROR_1;
             return retorno;
         }
-         if (minutos<=0){
-            retorno.resultado=Resultado.ERROR_2;
+        if (minutos <= 0) {
+            retorno.resultado = Resultado.ERROR_2;
             return retorno;
         }
-          if (puntoOrigen == null && puntoDestino == null){
-            retorno.resultado=Resultado.ERROR_3;
+        if (puntoOrigen == null && puntoDestino == null) {
+            retorno.resultado = Resultado.ERROR_3;
             return retorno;
         }
-            if (miMapa.existeArista(puntoOrigen, puntoDestino)){
-            retorno.resultado=Resultado.ERROR_4;
+        if (miMapa.existeArista(puntoOrigen, puntoDestino)) {
+            retorno.resultado = Resultado.ERROR_4;
             return retorno;
         }
-            //tengo que ver como agregarArista del delivery que es no dirigo
-            miMapa.agregarArista(puntoOrigen, puntoDestino, metros, minutos);
-            return retorno;
+        //tengo que ver como agregarArista del delivery que es no dirigo
+        miMapa.agregarArista(puntoOrigen, puntoDestino, metros, minutos);
+        return retorno;
     }
 
     @Override
     public Retorno registrarDelivery(String cedula, Double coordX, Double coordY) {
-        Punto nuevoDelivery =new Delivery(coordX, coordY, cedula);
-       return RegistroPunto(nuevoDelivery);
+        Punto nuevoDelivery = new Delivery(coordX, coordY, cedula);
+        return RegistroPunto(nuevoDelivery);
     }
 
     @Override
     public Retorno registrarMovil(String matricula, Double coordX, Double coordY) {
-        Punto nuevoMovil =new Movil(coordX, coordY, matricula);
-       return RegistroPunto(nuevoMovil);
+        Punto nuevoMovil = new Movil(coordX, coordY, matricula);
+        return RegistroPunto(nuevoMovil);
     }
 
     @Override
