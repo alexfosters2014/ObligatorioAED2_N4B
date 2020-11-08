@@ -178,14 +178,24 @@ public class Sistema implements ISistema {
     }
 
     @Override
-    public Retorno caminoMinimoMovil(Double coordXi, Double coordYi, Double coordXf, Double coordYf) {
+    public Retorno caminoMinimoMovil(Double coordXi, Double coordYi, Double coordXf, Double coordYf, String email) {
         Retorno retorno = new Retorno(Resultado.OK);
         Punto origen = new Esquina(coordXi, coordYi);
         Punto destino = new Esquina(coordXf, coordXf);
         retorno = miMapa.dijkstra_Movil_D(origen, destino);
         
-        if (retorno.resultado == Resultado.OK){
-            
+        
+        Usuario usuario=usuarios.buscar(new Usuario(email), new Entero());
+        if (retorno.resultado == Resultado.OK && usuario != null){
+           Direccion direccion = usuario.getDirecciones().recuperar(new Direccion(destino));
+           if (direccion == null){
+               usuario.getDirecciones().borrar(direccion);
+               direccion.aumentarRepeticiones();
+               usuario.getDirecciones().insertarOrd(direccion);
+               
+           }else{
+               usuario.getDirecciones().insertarOrd(direccion);
+           }
         }
         return retorno;
     }

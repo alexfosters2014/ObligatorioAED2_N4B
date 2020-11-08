@@ -19,7 +19,9 @@ public class Direccion implements Comparable<Direccion>{
     public void setPunto(Punto punto) {
         this.punto = punto;
     }
-
+    public void aumentarRepeticiones(){
+        repeticiones++;
+    }
     public int getRepeticiones() {
         return repeticiones;
     }

@@ -49,23 +49,6 @@ public class ABB<T extends Comparable<T>> {
             return buscarRec(dato, nodo.getDer(), numeroBusquedas);
         }
     }
-//    public void listarAscStr(newString listadoStr){
-//        
-//    if (esVacio()){
-//     return listadoStr.dato;   
-//    }
-//    listarAscStrRec(raiz, listadoStr);
-//    return listadoStr.dato;
-//   }
-//   
-//   private void listarAscStrRec(NodoABB<T> nodo, newString listadoStr){
-//       //in-order
-//    if (nodo != null){
-//        listarAscStrRec(nodo.getIzq(), listadoStr);
-//        listadoStr.dato += nodo.getDato().toString()+"|";
-//        listarAscStrRec(nodo.getDer(), listadoStr);
-//    }
-//   }
     public void listarAsc(newString listadoStr) {
        listarAscRec(raiz, listadoStr);
     }
