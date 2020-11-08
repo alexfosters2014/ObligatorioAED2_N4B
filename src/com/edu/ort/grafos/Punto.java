@@ -38,7 +38,9 @@ public abstract class Punto {
     public boolean isOcupado() {
         return ocupado;
     }
-
+    public boolean estaOcupado() {
+        return ocupado == false;
+    }
     public void setOcupado(boolean ocupado) {
         this.ocupado = ocupado;
     }
@@ -64,8 +66,6 @@ public abstract class Punto {
         return true;
     }
     
-    public abstract String QuienSoy();
-    public boolean estoyEnCoordenadas(double MicoordX, double MicoordY){
-        return (coordX == MicoordX && coordY == MicoordY);
-    }
+   public abstract String getColor();
+   public abstract String getTipo();
 }

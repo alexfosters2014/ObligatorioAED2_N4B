@@ -9,8 +9,16 @@ public class Movil extends Punto {
     }
 
     @Override
-    public String QuienSoy() {
-            return "MOVIL";
+    public String getColor() {
+        if (estaOcupado())
+            return "red";
+       return "green";
     }
+
+    @Override
+    public String getTipo() {
+    return "M";
+    }
+
 
 }

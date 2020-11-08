@@ -3,7 +3,6 @@ package ArbolBinario;
 public class ABB<T extends Comparable<T>> {
 
     private NodoABB<T> raiz;
-    private String listadoStr;
 
     public ABB(NodoABB<T> raiz) {
         this.raiz = raiz;
@@ -33,53 +32,51 @@ public class ABB<T extends Comparable<T>> {
         }
     }
 
-    public NodoABB<T> buscar(T dato) {
-        return buscarRec(dato, raiz, 0);
+    public T buscar(T dato, Entero numeroBusquedas) {
+        return buscarRec(dato, raiz, numeroBusquedas);
     }
 
-    private NodoABB<T> buscarRec(T dato, NodoABB<T> nodo, int conteo) {
+    private T buscarRec(T dato, NodoABB<T> nodo, Entero numeroBusquedas) {
         if (nodo == null) {
             return null;
         } else if (dato.equals(nodo.getDato())) {
-            nodo.setcantidadRecorridas(++conteo);
-            return nodo;
+            return nodo.getDato();
         } else if (dato.compareTo(nodo.getDato()) < 0) {
-            conteo++;
-            return buscarRec(dato, nodo.getIzq(), conteo);
+            numeroBusquedas.numero++;
+            return buscarRec(dato, nodo.getIzq(), numeroBusquedas);
         } else {
-            conteo++;
-            return buscarRec(dato, nodo.getDer(), conteo);
+            numeroBusquedas.numero++;
+            return buscarRec(dato, nodo.getDer(), numeroBusquedas);
         }
     }
-    public String listarAscStr(){
-    listadoStr="";
-    if (esVacio()){
-     return listadoStr;   
-    }
-    listarAscStrRec(raiz);
-    return listadoStr;
-   }
-   
-   private void listarAscStrRec(NodoABB<T> nodo){
-       //in-order
-    if (nodo != null){
-        listarAscStrRec(nodo.getIzq());
-        listadoStr += nodo.getDato().toString()+"|";
-        listarAscStrRec(nodo.getDer());
-    }
-   }
-    public String listarAsc() {
-       return listarAscRec(raiz,"");
+//    public void listarAscStr(newString listadoStr){
+//        
+//    if (esVacio()){
+//     return listadoStr.dato;   
+//    }
+//    listarAscStrRec(raiz, listadoStr);
+//    return listadoStr.dato;
+//   }
+//   
+//   private void listarAscStrRec(NodoABB<T> nodo, newString listadoStr){
+//       //in-order
+//    if (nodo != null){
+//        listarAscStrRec(nodo.getIzq(), listadoStr);
+//        listadoStr.dato += nodo.getDato().toString()+"|";
+//        listarAscStrRec(nodo.getDer(), listadoStr);
+//    }
+//   }
+    public void listarAsc(newString listadoStr) {
+       listarAscRec(raiz, listadoStr);
     }
 
-    private String listarAscRec(NodoABB<T> nodo,String StrLista) {
+    private void listarAscRec(NodoABB<T> nodo, newString listadoStr) {
         //in-order
         if (nodo != null) {
-            listarAscRec(nodo.getIzq(),StrLista);
-            StrLista += nodo.getDato().toString()+"|";
-            listarAscRec(nodo.getDer(),StrLista);
+            listarAscRec(nodo.getIzq(),listadoStr);
+            listadoStr.dato += nodo.getDato().toString()+"|";
+            listarAscRec(nodo.getDer(),listadoStr);
         }
-        return StrLista;
     }
 
     public void listarDsc() {

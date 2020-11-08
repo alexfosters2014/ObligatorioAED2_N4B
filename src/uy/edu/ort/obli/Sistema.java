@@ -1,5 +1,6 @@
 package uy.edu.ort.obli;
 
+import listas.Usuario;
 import ArbolBinario.*;
 import com.edu.ort.grafos.Delivery;
 import com.edu.ort.grafos.Esquina;
@@ -17,8 +18,7 @@ public class Sistema implements ISistema {
     @Override
     public Retorno inicializarSistema(int maxPuntos) {
         Retorno retorno = new Retorno(Resultado.OK);
-        miMapa=new Grafo(maxPuntos, false);
-        
+        miMapa=new Grafo(maxPuntos);
         return retorno;
     }
 
@@ -50,26 +50,29 @@ public class Sistema implements ISistema {
           Retorno retorno = new Retorno(Resultado.OK);
 
          Usuario usuario=new Usuario(email);
-         NodoABB<Usuario> usuarioBuscado;
+         Usuario usuarioBuscado;
          
          if (!usuario.ValidarEmail()){
             retorno.resultado=Resultado.ERROR_1;
             return retorno;
         }
-         usuarioBuscado=usuarios.buscar(usuario);
-       if (usuarioBuscado==null){
+         Entero ent = new Entero();
+         usuarioBuscado = usuarios.buscar(usuario,ent);
+       if (usuarioBuscado == null){
             retorno.resultado=Resultado.ERROR_2;
             return retorno;
         }
-       retorno.valorString=usuarioBuscado.getDato().toString();
-       retorno.valorEntero=usuarioBuscado.getCantidadRecorridas();
+       retorno.valorString = usuarioBuscado.toString();
+       retorno.valorEntero = ent.numero;
        return retorno;
     }
 
     @Override
     public Retorno listarUsuarios() {
          Retorno retorno = new Retorno(Resultado.OK);
-             retorno.valorString=usuarios.listarAscStr();
+                newString listado= new newString();
+                usuarios.listarAsc(listado);
+             retorno.valorString = listado.dato;
              return retorno;
     }
 
