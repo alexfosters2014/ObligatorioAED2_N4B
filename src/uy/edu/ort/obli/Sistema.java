@@ -26,7 +26,10 @@ public class Sistema implements ISistema {
 
     @Override
     public Retorno destruirSistema() {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+       Retorno retorno = new Retorno(Resultado.OK);
+        miMapa = null;
+        usuarios = null;
+        return retorno;
     }
 
     @Override
@@ -202,7 +205,10 @@ public class Sistema implements ISistema {
 
     @Override
     public Retorno caminoMinimoDelivery(Double coordXi, Double coordYi, Double coordXf, Double coordYf) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        Retorno retorno = new Retorno(Resultado.OK);
+        Punto origen = new Esquina(coordXi, coordYi);
+        Punto destino = new Esquina(coordXf, coordXf);
+        return miMapa.dijkstra_Delivery_ND(origen, destino);
     }
 
     @Override

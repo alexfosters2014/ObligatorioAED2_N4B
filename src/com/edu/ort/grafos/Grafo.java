@@ -211,8 +211,11 @@ public class Grafo {
         }
     }
 
-    public void dijkstra_Delivery_ND(Punto origen) {
+    public Retorno dijkstra_Delivery_ND(Punto origen, Punto destino) {
+        Retorno retorno = new Retorno(Retorno.Resultado.OK);
         int posO = buscarPos(origen);
+        int posD = buscarPos(destino);
+        
         // Armo los tres arreglos necesarios para realizar el algoritmo
         int[] dist = new int[tope];
         int[] ant = new int[tope];
@@ -248,27 +251,33 @@ public class Grafo {
             }
         }
 
-        //camino minimo delivery en tiempo
-//        int posMinDel = -1, minDel = Integer.MAX_VALUE;
-//        for (int i = 0; i < tope; i++) {
-//            if (vertices[i] instanceof Delivery &&  dist[i] < minDel){
-//                posMinDel = i;
-//                minDel = dist[i];
-//            }
-//        }
-//       
-//        Retorno retorno = new Retorno(Retorno.Resultado.OK);
-//        
-//        Delivery delivery = (Delivery)vertices[posMinDel];
-//        if (delivery.estaOcupado()){
-//            retorno.resultado = Retorno.Resultado.ERROR_2;
-//            return retorno;
-//        }
-//         //seteo a ocupado el deliver
-//        delivery.setOcupado(false);
+        int e=0;
+        boolean deliveryDisponible = false;
+        while (e<tope && !deliveryDisponible){
+            if (vertices[e] instanceof Delivery && !vertices[e].estaLibre()){
+                deliveryDisponible=true;
+            }
+                e++;
+        }
+       
+        if (!deliveryDisponible){
+            retorno.resultado=Retorno.Resultado.ERROR_2;
+            return retorno;
+        }
+        
+        // evaluar si el camino fue encontrado=
+        
+        retorno.valorEntero=dist[posD];
+        retorno.valorString = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
+        //iterno para guardar las coordenadas de cada punto del camino
+        for (int i = posD; i > 0; i--) {
+            int posAnt=ant[i];
+            retorno.valorString = vertices[posAnt].getCoordX() + ";" + vertices[posAnt].getCoordY() + "|" + retorno.valorString;
+        }
+        return retorno;
     }
 
-    public Retorno dijkstra_Movil_D(Punto origen,Punto destino) {
+    public Retorno dijkstra_Movil_D(Punto origen, Punto destino) {
         Retorno retorno = new Retorno(Retorno.Resultado.OK);
         int posO = buscarPos(origen);
         int posD = buscarPos(destino);
@@ -313,14 +322,6 @@ public class Grafo {
             }
         }
        
-        //camino minimo movil en metros
-        //int posMinDel = -1, minDel = Integer.MAX_VALUE;
-//        for (int i = 0; i < tope; i++) {
-//            if (vertices[i] instanceof Movil &&  dist[i] < minDel){
-//                posMinDel = i;
-//                minDel = dist[i];
-//            }
-//        }
         int e=0;
         boolean movilDisponible = false;
         while (e<tope && !movilDisponible){
