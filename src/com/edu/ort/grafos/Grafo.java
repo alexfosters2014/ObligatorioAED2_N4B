@@ -211,7 +211,7 @@ public class Grafo {
         }
     }
 
-    public void dijkstra_Delivery_D(Punto origen) {
+    public void dijkstra_Delivery_ND(Punto origen) {
         int posO = buscarPos(origen);
         // Armo los tres arreglos necesarios para realizar el algoritmo
         int[] dist = new int[tope];
@@ -268,8 +268,16 @@ public class Grafo {
 //        delivery.setOcupado(false);
     }
 
-    public void dijkstra_Movil_ND(Punto origen) {
+    public Retorno dijkstra_Movil_D(Punto origen,Punto destino) {
+        Retorno retorno = new Retorno(Retorno.Resultado.OK);
         int posO = buscarPos(origen);
+        int posD = buscarPos(destino);
+        
+        if (posO == -1 || posD == -1){
+            retorno.resultado=Retorno.Resultado.ERROR_1;
+            return retorno;
+        }
+        
         // Armo los tres arreglos necesarios para realizar el algoritmo
         int[] dist = new int[tope];
         int[] ant = new int[tope];
@@ -295,8 +303,8 @@ public class Grafo {
             // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
             // hasta ahora descubierta
             for (int j = 0; j < tope; j++) {
-                if (!vis[j] && matAdyNODir[posMin][j].isExiste()) {
-                    int sumaAcumulada = dist[posMin] + matAdyNODir[posMin][j].getMetros();
+                if (!vis[j] && matAdyDir[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] + matAdyDir[posMin][j].getMetros();
                     if (sumaAcumulada < dist[j]) {
                         dist[j] = sumaAcumulada;
                         ant[j] = posMin;
@@ -304,10 +312,39 @@ public class Grafo {
                 }
             }
         }
-        System.out.println(Arrays.toString(dist));
-        System.out.println(Arrays.toString(vertices));
-        System.out.println(Arrays.toString(ant));
-
+       
+        //camino minimo movil en metros
+        //int posMinDel = -1, minDel = Integer.MAX_VALUE;
+//        for (int i = 0; i < tope; i++) {
+//            if (vertices[i] instanceof Movil &&  dist[i] < minDel){
+//                posMinDel = i;
+//                minDel = dist[i];
+//            }
+//        }
+        int e=0;
+        boolean movilDisponible = false;
+        while (e<tope && !movilDisponible){
+            if (vertices[e] instanceof Movil && !vertices[e].estaLibre()){
+                movilDisponible=true;
+            }
+                e++;
+        }
+       
+        if (!movilDisponible){
+            retorno.resultado=Retorno.Resultado.ERROR_2;
+            return retorno;
+        }
+        
+        // evaluar si el camino fue encontrado=
+        
+        retorno.valorEntero=dist[posD];
+        retorno.valorString = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
+        //iterno para guardar las coordenadas de cada punto del camino
+        for (int i = posD; i > 0; i--) {
+            int posAnt=ant[i];
+            retorno.valorString = vertices[posAnt].getCoordX() + ";" + vertices[posAnt].getCoordY() + "|" + retorno.valorString;
+        }
+        return retorno;
     }
 
     public Retorno dijkstra_MasCercano(Punto origen, enumPuntos nombrePunto) {//pronto
@@ -337,30 +374,40 @@ public class Grafo {
             vis[posMin] = true;
             // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
             // hasta ahora descubierta
-            for (int j = 0; j < tope; j++) {
-                if (!vis[j] && matAdyNODir[posMin][j].isExiste()) {
-                    int sumaAcumulada = 0;
-                    if (nombrePunto == nombrePunto.DELIVERY) {
-                        sumaAcumulada = dist[posMin] + 1;
-                    } else {
-                        sumaAcumulada = dist[posMin] + matAdyNODir[posMin][j].getMetros();
+
+            if (nombrePunto == nombrePunto.DELIVERY) {
+                //para delivery
+                for (int j = 0; j < tope; j++) {
+                    if (!vis[j] && matAdyDir[posMin][j].isExiste()) {
+                        int sumaAcumulada = dist[posMin] + 1;
+                        if (sumaAcumulada < dist[j]) {
+                            dist[j] = sumaAcumulada;
+                            ant[j] = posMin;
+                        }
                     }
-                    if (sumaAcumulada < dist[j]) {
-                        dist[j] = sumaAcumulada;
-                        ant[j] = posMin;
+                }
+            } else {
+                //para Movil
+                for (int j = 0; j < tope; j++) {
+                    if (!vis[j] && matAdyNODir[posMin][j].isExiste()) {
+                        int sumaAcumulada = dist[posMin] + matAdyNODir[posMin][j].getMetros();
+                        if (sumaAcumulada < dist[j]) {
+                            dist[j] = sumaAcumulada;
+                            ant[j] = posMin;
+                        }
                     }
                 }
             }
         }
-        // ************** operaciones con Delivery ********************
 
+        // ************** operaciones con Delivery ********************
         if (nombrePunto == nombrePunto.DELIVERY) {
 
             int posMinDel = -1, valorMinDel = Integer.MAX_VALUE;
             for (int i = 0; i < tope; i++) {
                 if (vertices[i] instanceof Delivery) {
                     Delivery delivery = (Delivery) vertices[i];
-                    if (!delivery.estaOcupado() && dist[i] < valorMinDel) {
+                    if (delivery.estaLibre() && dist[i] < valorMinDel) {
                         posMinDel = i;
                         valorMinDel = dist[i];
                     }
@@ -384,7 +431,7 @@ public class Grafo {
             for (int i = 0; i < tope; i++) {
                 if (vertices[i] instanceof Movil) {
                     Movil movil = (Movil) vertices[i];
-                    if (!movil.estaOcupado() && dist[i] < valorMinMovil) {
+                    if (movil.estaLibre() && dist[i] < valorMinMovil) {
                         posMinMovil = i;
                         valorMinMovil = dist[i];
                     }

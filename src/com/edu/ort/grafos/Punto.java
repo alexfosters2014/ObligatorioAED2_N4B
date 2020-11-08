@@ -39,6 +39,9 @@ public abstract class Punto {
         return ocupado;
     }
     public boolean estaOcupado() {
+        return ocupado == true;
+    }
+    public boolean estaLibre() {
         return ocupado == false;
     }
     public void setOcupado(boolean ocupado) {

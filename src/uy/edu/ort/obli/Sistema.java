@@ -13,13 +13,14 @@ import uy.edu.ort.obli.Retorno.Resultado;
 
 public class Sistema implements ISistema {
 
-    ABB<Usuario> usuarios = new ABB<Usuario>();
+    ABB<Usuario> usuarios;
     Grafo miMapa;
 
     @Override
     public Retorno inicializarSistema(int maxPuntos) {
         Retorno retorno = new Retorno(Resultado.OK);
         miMapa = new Grafo(maxPuntos);
+        usuarios = new ABB<Usuario>();
         return retorno;
     }
 
@@ -89,10 +90,10 @@ public class Sistema implements ISistema {
             retorno.resultado = Resultado.ERROR_2;
             return retorno;
         }
-        for (Direccion dir : usuarioBuscado.getDirecciones()){
-            retorno.valorString+=dir.getPunto().getCoordX() + ";" + dir.getPunto().getCoordY() + "|";
+        for (Direccion dir : usuarioBuscado.getDirecciones()) {
+            retorno.valorString += dir.getPunto().getCoordX() + ";" + dir.getPunto().getCoordY() + "|";
         }
-        retorno.valorString=retorno.valorString.substring(0, retorno.valorString.length()-1);
+        retorno.valorString = retorno.valorString.substring(0, retorno.valorString.length() - 1);
         return retorno;
     }
 
@@ -157,29 +158,36 @@ public class Sistema implements ISistema {
     @Override
     public Retorno movilMasCercano(Double coordXi, Double coordYi) {
         Retorno retorno = new Retorno(Resultado.OK);
-        Punto esquina = miMapa.buscarVertice(new Esquina(coordXi,coordYi)); //cualquier punto
-        if (esquina == null ){
+        Punto esquina = miMapa.buscarVertice(new Esquina(coordXi, coordYi)); //cualquier punto
+        if (esquina == null) {
             retorno.resultado = Resultado.ERROR_1;
             return retorno;
         }
-        return miMapa.dijkstra_MasCercano(esquina,Grafo.enumPuntos.MOVIL);
+        return miMapa.dijkstra_MasCercano(esquina, Grafo.enumPuntos.MOVIL);
     }
 
     @Override
     public Retorno deliveryMasCercano(Double coordXi, Double coordYi) {//haciendo
         Retorno retorno = new Retorno(Resultado.OK);
-        Punto esquina = miMapa.buscarVertice(new Esquina(coordXi,coordYi)); //cualquier punto
-        if (esquina == null ){
+        Punto esquina = miMapa.buscarVertice(new Esquina(coordXi, coordYi)); //cualquier punto
+        if (esquina == null) {
             retorno.resultado = Resultado.ERROR_1;
             return retorno;
         }
-        return miMapa.dijkstra_MasCercano(esquina,Grafo.enumPuntos.DELIVERY);
+        return miMapa.dijkstra_MasCercano(esquina, Grafo.enumPuntos.DELIVERY);
     }
 
     @Override
     public Retorno caminoMinimoMovil(Double coordXi, Double coordYi, Double coordXf, Double coordYf) {
-        return new Retorno(Resultado.OK);
+        Retorno retorno = new Retorno(Resultado.OK);
+        Punto origen = new Esquina(coordXi, coordYi);
+        Punto destino = new Esquina(coordXf, coordXf);
+        retorno = miMapa.dijkstra_Movil_D(origen, destino);
         
+        if (retorno.resultado == Resultado.OK){
+            
+        }
+        return retorno;
     }
 
     @Override
