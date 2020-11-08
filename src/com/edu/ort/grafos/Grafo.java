@@ -450,5 +450,17 @@ public class Grafo {
             return retorno;
         }
     }
+    
+    public String urlPuntos(){
+        String url="";
+        
+        for (int i = 0; i < tope; i++) {
+            if (vertices[i] instanceof Delivery || vertices[i] instanceof Movil){
+            Punto punto = vertices[i];
+            url+="&markers=color:"+ punto.getColor() + "%7Clabel:"+ punto.getTipo() +"%7C"+ punto.getCoordX() +","+ punto.getCoordY();
+            }
+        }
+        return url;
+    }
 
 }

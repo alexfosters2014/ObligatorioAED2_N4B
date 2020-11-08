@@ -7,6 +7,9 @@ import com.edu.ort.grafos.Esquina;
 import com.edu.ort.grafos.Grafo;
 import com.edu.ort.grafos.Movil;
 import com.edu.ort.grafos.Punto;
+import java.awt.Desktop;
+import java.net.URI;
+import java.net.URL;
 import listas.Direccion;
 
 import uy.edu.ort.obli.Retorno.Resultado;
@@ -213,7 +216,23 @@ public class Sistema implements ISistema {
 
     @Override
     public Retorno dibujarMapa() {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+       Retorno retorno = new Retorno(Resultado.OK);
+        try {
+             Desktop.getDesktop().browse(new URL(urlWeb()).toURI());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       
+        return retorno;
     }
-
+    
+    public String urlWeb(){
+        String url="";
+        url = "http://maps.googleapis.com/maps/api/staticmap?"+
+              "&size=1200x600"+
+              "&maptype=roadmap"+
+               miMapa.urlPuntos()+
+               "&key=AIzaSyC2kHGtzaC3OOyc7Wi1LMBcEwM9btRZLqw" ;
+        return url;
+    }
 }
