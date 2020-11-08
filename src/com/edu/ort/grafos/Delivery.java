@@ -8,6 +8,9 @@ public class Delivery extends Punto{
         super(coordX, coordY);
         this.cedula=cedula;
     }
+     public Delivery(double coordX, double coordY) {
+        super(coordX, coordY);
+    }
 
     public String getCedula() {
         return cedula;

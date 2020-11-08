@@ -92,6 +92,7 @@ public class Sistema implements ISistema {
         for (Direccion dir : usuarioBuscado.getDirecciones()){
             retorno.valorString+=dir.getPunto().getCoordX() + ";" + dir.getPunto().getCoordY() + "|";
         }
+        retorno.valorString=retorno.valorString.substring(0, retorno.valorString.length()-1);
         return retorno;
     }
 
@@ -117,8 +118,8 @@ public class Sistema implements ISistema {
     @Override
     public Retorno registrarTramo(double coordXi, double coordYi, double coordXf, double coordYf, int metros, int minutos) {
         Retorno retorno = new Retorno(Resultado.OK);
-        Punto puntoOrigen = miMapa.buscarVertice(coordXi, coordYi);
-        Punto puntoDestino = miMapa.buscarVertice(coordXf, coordYf);
+        Punto puntoOrigen = miMapa.buscarVertice(new Esquina(coordXi, coordYi));
+        Punto puntoDestino = miMapa.buscarVertice(new Esquina(coordXi, coordYi));
 
         if (metros <= 0) {
             retorno.resultado = Resultado.ERROR_1;
@@ -155,17 +156,30 @@ public class Sistema implements ISistema {
 
     @Override
     public Retorno movilMasCercano(Double coordXi, Double coordYi) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        Retorno retorno = new Retorno(Resultado.OK);
+        Punto esquina = miMapa.buscarVertice(new Esquina(coordXi,coordYi)); //cualquier punto
+        if (esquina == null ){
+            retorno.resultado = Resultado.ERROR_1;
+            return retorno;
+        }
+        return miMapa.dijkstra_MasCercano(esquina,Grafo.enumPuntos.MOVIL);
     }
 
     @Override
-    public Retorno deliveryMasCercano(Double coordXi, Double coordYi) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+    public Retorno deliveryMasCercano(Double coordXi, Double coordYi) {//haciendo
+        Retorno retorno = new Retorno(Resultado.OK);
+        Punto esquina = miMapa.buscarVertice(new Esquina(coordXi,coordYi)); //cualquier punto
+        if (esquina == null ){
+            retorno.resultado = Resultado.ERROR_1;
+            return retorno;
+        }
+        return miMapa.dijkstra_MasCercano(esquina,Grafo.enumPuntos.DELIVERY);
     }
 
     @Override
     public Retorno caminoMinimoMovil(Double coordXi, Double coordYi, Double coordXf, Double coordYf) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        return new Retorno(Resultado.OK);
+        
     }
 
     @Override

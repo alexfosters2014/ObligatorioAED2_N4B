@@ -2,14 +2,15 @@ package com.edu.ort.grafos;
 
 import cola.ColaDinamica;
 import cola.ICola;
+import uy.edu.ort.obli.Retorno;
 
 public class Grafo {
 
-    public enum medidas {
-        TIEMPO,
-        DISTANCIA,
-        TRAMO
+    public enum enumPuntos {
+        DELIVERY,
+        MOVIL
     }
+
     private int tope;
     private int cant;
     private Punto[] vertices;
@@ -92,15 +93,14 @@ public class Grafo {
         return -1;
     }
 
-    private int buscarPos(double coordX, double coordY) {
-        for (int i = 0; i < tope; i++) {
-            if (vertices[i].estoyEnCoordenadas(coordX, coordY)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
+//    private int buscarPos(double coordX, double coordY) {
+//        for (int i = 0; i < tope; i++) {
+//            if (vertices[i].estoyEnCoordenadas(coordX, coordY)) {
+//                return i;
+//            }
+//        }
+//        return -1;
+//    }
     public boolean existeArista(Punto origen, Punto destino) {
         int posOrigen = buscarPos(origen);
         int posDestino = buscarPos(destino);
@@ -111,8 +111,8 @@ public class Grafo {
         return buscarPos(origen) != -1;
     }
 
-    public Punto buscarVertice(double coordX, double coordY) {
-        int pos = buscarPos(coordX, coordY);
+    public Punto buscarVertice(Punto origen) {
+        int pos = buscarPos(origen);
         if (pos == -1) {
             return null;
         }
@@ -247,10 +247,25 @@ public class Grafo {
                 }
             }
         }
-        System.out.println(Arrays.toString(dist));
-        System.out.println(Arrays.toString(vertices));
-        System.out.println(Arrays.toString(ant));
 
+        //camino minimo delivery en tiempo
+//        int posMinDel = -1, minDel = Integer.MAX_VALUE;
+//        for (int i = 0; i < tope; i++) {
+//            if (vertices[i] instanceof Delivery &&  dist[i] < minDel){
+//                posMinDel = i;
+//                minDel = dist[i];
+//            }
+//        }
+//       
+//        Retorno retorno = new Retorno(Retorno.Resultado.OK);
+//        
+//        Delivery delivery = (Delivery)vertices[posMinDel];
+//        if (delivery.estaOcupado()){
+//            retorno.resultado = Retorno.Resultado.ERROR_2;
+//            return retorno;
+//        }
+//         //seteo a ocupado el deliver
+//        delivery.setOcupado(false);
     }
 
     public void dijkstra_Movil_ND(Punto origen) {
@@ -295,8 +310,9 @@ public class Grafo {
 
     }
 
-    public void dijkstra_DeliveryMasCercano(Punto origen) {
+    public Retorno dijkstra_MasCercano(Punto origen, enumPuntos nombrePunto) {//pronto
         int posO = buscarPos(origen);
+        Retorno retorno = new Retorno(Retorno.Resultado.OK);
         // Armo los tres arreglos necesarios para realizar el algoritmo
         int[] dist = new int[tope];
         int[] ant = new int[tope];
@@ -323,7 +339,12 @@ public class Grafo {
             // hasta ahora descubierta
             for (int j = 0; j < tope; j++) {
                 if (!vis[j] && matAdyNODir[posMin][j].isExiste()) {
-                    int sumaAcumulada = dist[posMin] + 1;
+                    int sumaAcumulada = 0;
+                    if (nombrePunto == nombrePunto.DELIVERY) {
+                        sumaAcumulada = dist[posMin] + 1;
+                    } else {
+                        sumaAcumulada = dist[posMin] + matAdyNODir[posMin][j].getMetros();
+                    }
                     if (sumaAcumulada < dist[j]) {
                         dist[j] = sumaAcumulada;
                         ant[j] = posMin;
@@ -331,10 +352,55 @@ public class Grafo {
                 }
             }
         }
-        System.out.println(Arrays.toString(dist));
-        System.out.println(Arrays.toString(vertices));
-        System.out.println(Arrays.toString(ant));
+        // ************** operaciones con Delivery ********************
 
+        if (nombrePunto == nombrePunto.DELIVERY) {
+
+            int posMinDel = -1, valorMinDel = Integer.MAX_VALUE;
+            for (int i = 0; i < tope; i++) {
+                if (vertices[i] instanceof Delivery) {
+                    Delivery delivery = (Delivery) vertices[i];
+                    if (!delivery.estaOcupado() && dist[i] < valorMinDel) {
+                        posMinDel = i;
+                        valorMinDel = dist[i];
+                    }
+                }
+            }
+
+            if (valorMinDel == Integer.MAX_VALUE) {
+                retorno.resultado = Retorno.Resultado.ERROR_2;
+                return retorno;
+            }
+            //seteo a ocupado el deliver
+            Delivery delivery = (Delivery) vertices[posMinDel];
+            delivery.setOcupado(false);
+            retorno.valorEntero = valorMinDel;
+            retorno.valorString = delivery.getCoordX() + ";" + delivery.getCoordY();
+            return retorno;
+
+        } else {
+            // ************** operaciones con MOVIL ********************
+            int posMinMovil = -1, valorMinMovil = Integer.MAX_VALUE;
+            for (int i = 0; i < tope; i++) {
+                if (vertices[i] instanceof Movil) {
+                    Movil movil = (Movil) vertices[i];
+                    if (!movil.estaOcupado() && dist[i] < valorMinMovil) {
+                        posMinMovil = i;
+                        valorMinMovil = dist[i];
+                    }
+                }
+            }
+
+            if (valorMinMovil == Integer.MAX_VALUE) {
+                retorno.resultado = Retorno.Resultado.ERROR_2;
+                return retorno;
+            }
+            //seteo a ocupado el deliver
+            Movil movil = (Movil) vertices[posMinMovil];
+            movil.setOcupado(false);
+            retorno.valorEntero = valorMinMovil;
+            return retorno;
+        }
     }
 
 }
