@@ -204,7 +204,7 @@ public class Grafo {
     }
 
     public Retorno dijkstra_Delivery_ND(Punto origen, Punto destino) {
-        Retorno retorno = new Retorno(Retorno.Resultado.OK);
+        Retorno retorno = new Retorno(Retorno.Resultado.OK);//nuevo comentario
         int posO = buscarPos(origen);
         int posD = buscarPos(destino);
          if (posO == -1 || posD == -1){
