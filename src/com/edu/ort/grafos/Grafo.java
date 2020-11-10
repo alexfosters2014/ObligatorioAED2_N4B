@@ -264,10 +264,11 @@ public class Grafo {
         
         retorno.valorEntero=dist[posD];
         retorno.valorString = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
+        int a = posD;
         //iterno para guardar las coordenadas de cada punto del camino
-        for (int i = posD; i > 0; i--) {
-            int posAnt=ant[i];
-            retorno.valorString = vertices[posAnt].getCoordX() + ";" + vertices[posAnt].getCoordY() + "|" + retorno.valorString;
+        while (ant[a] > -1) {
+            retorno.valorString = vertices[ant[a]].getCoordX() + ";" + vertices[ant[a]].getCoordY() + "|" + retorno.valorString;
+            a=ant[a];
         }
         return retorno;
     }
@@ -335,10 +336,12 @@ public class Grafo {
         
         retorno.valorEntero=dist[posD];
         retorno.valorString = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
+        retorno.valorString = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
+        int a = posD;
         //iterno para guardar las coordenadas de cada punto del camino
-        for (int i = posD; i > 0; i--) {
-            int posAnt=ant[i];
-            retorno.valorString = vertices[posAnt].getCoordX() + ";" + vertices[posAnt].getCoordY() + "|" + retorno.valorString;
+        while (ant[a] > -1) {
+            retorno.valorString = vertices[ant[a]].getCoordX() + ";" + vertices[ant[a]].getCoordY() + "|" + retorno.valorString;
+            a=ant[a];
         }
         return retorno;
     }
