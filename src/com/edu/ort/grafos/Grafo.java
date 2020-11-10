@@ -8,7 +8,9 @@ public class Grafo {
 
     public enum enumPuntos {
         DELIVERY,
-        MOVIL
+        MOVIL,
+        D,
+        ND
     }
 
     private int tope;
@@ -96,7 +98,8 @@ public class Grafo {
     public boolean existeArista(Punto origen, Punto destino) {
         int posOrigen = buscarPos(origen);
         int posDestino = buscarPos(destino);
-        return matAdyDir[posOrigen][posDestino].isExiste();
+            return matAdyNODir[posOrigen][posDestino].isExiste();
+        
     }
 
     public boolean existeVertice(Punto origen) {
@@ -204,7 +207,7 @@ public class Grafo {
     }
 
     public Retorno dijkstra_Delivery_ND(Punto origen, Punto destino) {
-        Retorno retorno = new Retorno(Retorno.Resultado.OK);
+        Retorno retorno = new Retorno(Retorno.Resultado.OK);//nuevo comentario
         int posO = buscarPos(origen);
         int posD = buscarPos(destino);
          if (posO == -1 || posD == -1){
@@ -264,10 +267,11 @@ public class Grafo {
         
         retorno.valorEntero=dist[posD];
         retorno.valorString = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
+        int a = posD;
         //iterno para guardar las coordenadas de cada punto del camino
-        for (int i = posD; i > 0; i--) {
-            int posAnt=ant[i];
-            retorno.valorString = vertices[posAnt].getCoordX() + ";" + vertices[posAnt].getCoordY() + "|" + retorno.valorString;
+        while (ant[a] > -1) {
+            retorno.valorString = vertices[ant[a]].getCoordX() + ";" + vertices[ant[a]].getCoordY() + "|" + retorno.valorString;
+            a=ant[a];
         }
         return retorno;
     }
@@ -335,10 +339,12 @@ public class Grafo {
         
         retorno.valorEntero=dist[posD];
         retorno.valorString = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
+        retorno.valorString = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
+        int a = posD;
         //iterno para guardar las coordenadas de cada punto del camino
-        for (int i = posD; i > 0; i--) {
-            int posAnt=ant[i];
-            retorno.valorString = vertices[posAnt].getCoordX() + ";" + vertices[posAnt].getCoordY() + "|" + retorno.valorString;
+        while (ant[a] > -1) {
+            retorno.valorString = vertices[ant[a]].getCoordX() + ";" + vertices[ant[a]].getCoordY() + "|" + retorno.valorString;
+            a=ant[a];
         }
         return retorno;
     }

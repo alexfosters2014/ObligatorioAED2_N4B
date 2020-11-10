@@ -2,9 +2,10 @@
 
 import static org.junit.Assert.*;
 
+import uy.edu.ort.obli.*;
+
 import org.junit.Before;
 import org.junit.Test;
-import uy.edu.ort.obli.*;
 
 public class TestsObligatorio {
 
@@ -478,12 +479,12 @@ public class TestsObligatorio {
 		retorno = sistema.deliveryMasCercano(1.0, 1.0);
 		assertEquals(Retorno.Resultado.OK, retorno.resultado);
 		assertEquals(1, retorno.valorEntero);
-		assertEquals("4.0;4.0", retorno.valorEntero);
+		assertEquals("4.0;4.0", retorno.valorString);
 
 		retorno = sistema.deliveryMasCercano(1.0, 1.0);
 		assertEquals(Retorno.Resultado.OK, retorno.resultado);
 		assertEquals(5, retorno.valorEntero);
-		assertEquals("10.0;10.0", retorno.valorEntero);
+		assertEquals("10.0;10.0", retorno.valorString);
 		
 	}
 
@@ -534,12 +535,12 @@ public class TestsObligatorio {
 		retorno = sistema.deliveryMasCercano(1.0, 1.0);
 		assertEquals(Retorno.Resultado.OK, retorno.resultado);
 		assertEquals(1, retorno.valorEntero);
-		assertEquals("4.0;4.0", retorno.valorEntero);
+		assertEquals("4.0;4.0", retorno.valorString);
 
 		retorno = sistema.deliveryMasCercano(1.0, 1.0);
 		assertEquals(Retorno.Resultado.OK, retorno.resultado);
 		assertEquals(5, retorno.valorEntero);
-		assertEquals("10.0;10.0", retorno.valorEntero);
+		assertEquals("10.0;10.0", retorno.valorString);
 
 		retorno = sistema.deliveryMasCercano(1.0, 1.0);
 		assertEquals(Retorno.Resultado.ERROR_2, retorno.resultado);
