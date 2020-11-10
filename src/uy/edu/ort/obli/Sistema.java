@@ -173,13 +173,7 @@ public class Sistema implements ISistema {
 
     @Override
     public Retorno deliveryMasCercano(Double coordXi, Double coordYi) {//haciendo
-        Retorno retorno = new Retorno(Resultado.OK);
-        Punto esquina = miMapa.buscarVertice(new Esquina(coordXi, coordYi)); //cualquier punto
-        if (esquina == null) {
-            retorno.resultado = Resultado.ERROR_1;
-            return retorno;
-        }
-        return miMapa.dijkstra_MasCercano(esquina, Grafo.enumPuntos.DELIVERY);
+        return miMapa.dijkstra_MasCercano(new Esquina(coordXi, coordYi), Grafo.enumPuntos.DELIVERY);
     }
 
     @Override

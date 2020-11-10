@@ -50,23 +50,14 @@ public abstract class Punto {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (obj != null) {
+        final Punto other = (Punto) obj;
+        
+        if (this.coordX == other.coordX && this.coordY == other.coordY) {
             return true;
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Punto other = (Punto) obj;
-        if (this.coordX != other.coordX) {
-            return false;
-        }
-        if (this.coordY != other.coordY) {
-            return false;
-        }
-        return true;
+         }
+        return false;
     }
 
    

@@ -23,16 +23,16 @@ public class Grafo {
         this.vertices = new Punto[tope];
         this.matAdyDir = new Arista[tope][tope];
         this.matAdyNODir = new Arista[tope][tope];
-        int largo = matAdyDir.length;
+        //int largo = matAdyDir.length;
 
-        for (int i = 0; i < largo; i++) {
-            for (int j = 0; j < largo; j++) {
+        for (int i = 0; i < tope; i++) {
+            for (int j = 0; j < tope; j++) {
                 matAdyDir[i][j] = new Arista();
             }
         }
 
-        for (int i = 0; i < largo; i++) {
-            for (int j = 1; j < largo; j++) {
+        for (int i = 0; i < tope; i++) {
+            for (int j = 0; j < tope; j++) {
                 matAdyNODir[i][j] = matAdyNODir[j][i] = new Arista();
             }
         }
@@ -84,7 +84,7 @@ public class Grafo {
         matAdyNODir[posOrigen][posDestino].setMinutos(minutos);
     }
 
-    private int buscarPos(Punto destino) {
+    private int buscarPos(Punto destino) {///////////
         for (int i = 0; i < tope; i++) {
             if (destino.equals(vertices[i])) {
                 return i;
@@ -249,7 +249,7 @@ public class Grafo {
         int e=0;
         boolean deliveryDisponible = false;
         while (e<tope && !deliveryDisponible){
-            if (vertices[e] instanceof Delivery && !vertices[e].estaLibre()){
+            if (vertices[e] instanceof Delivery && vertices[e].estaLibre()){
                 deliveryDisponible=true;
             }
                 e++;
@@ -414,10 +414,10 @@ public class Grafo {
                 }
             }
 
-            if (valorMinDel == Integer.MAX_VALUE) {
-                retorno.resultado = Retorno.Resultado.ERROR_2;
-                return retorno;
-            }
+//            if (valorMinDel == Integer.MAX_VALUE) {
+//                retorno.resultado = Retorno.Resultado.ERROR_2;
+//                return retorno;
+//            }
             //seteo a ocupado el deliver
             Delivery delivery = (Delivery) vertices[posMinDel];
             delivery.setOcupado(false);
