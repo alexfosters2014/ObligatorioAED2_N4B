@@ -1,6 +1,6 @@
 package uy.edu.ort.obli;
 
-import listas.Usuario;
+import ArbolBinario.Usuario;
 import ArbolBinario.*;
 import com.edu.ort.grafos.Delivery;
 import com.edu.ort.grafos.Esquina;
@@ -22,6 +22,10 @@ public class Sistema implements ISistema {
     @Override
     public Retorno inicializarSistema(int maxPuntos) {
         Retorno retorno = new Retorno(Resultado.OK);
+        if (maxPuntos <= 0){
+            retorno.resultado=Resultado.ERROR_1;
+            return retorno;
+        }
         miMapa = new Grafo(maxPuntos);
         usuarios = new ABB<Usuario>();
         return retorno;
@@ -36,10 +40,10 @@ public class Sistema implements ISistema {
     }
 
     @Override
-    public Retorno registrarUsuario(String nombre, String email, String password) {
+    public Retorno registrarUsuario(String email, String nombre, String password) {
         Retorno retorno = new Retorno(Resultado.OK);
 
-        Usuario usuario = new Usuario(nombre, email, password);
+        Usuario usuario = new Usuario(nombre, email.toLowerCase(), password);
 
         if (!usuario.ValidarEmail()) {
             retorno.resultado = Resultado.ERROR_1;
@@ -50,6 +54,7 @@ public class Sistema implements ISistema {
             retorno.resultado = Resultado.ERROR_2;
             return retorno;
         }
+        usuarios.insertar(usuario);
         return retorno;
     }
 
@@ -57,7 +62,7 @@ public class Sistema implements ISistema {
     public Retorno buscarUsuario(String email) {
         Retorno retorno = new Retorno(Resultado.OK);
 
-        Usuario usuario = new Usuario(email);
+        Usuario usuario = new Usuario(email.toLowerCase());
 
         if (!usuario.ValidarEmail()) {
             retorno.resultado = Resultado.ERROR_1;
@@ -126,7 +131,7 @@ public class Sistema implements ISistema {
     public Retorno registrarTramo(double coordXi, double coordYi, double coordXf, double coordYf, int metros, int minutos) {
         Retorno retorno = new Retorno(Resultado.OK);
         Punto puntoOrigen = miMapa.buscarVertice(new Esquina(coordXi, coordYi));
-        Punto puntoDestino = miMapa.buscarVertice(new Esquina(coordXi, coordYi));
+        Punto puntoDestino = miMapa.buscarVertice(new Esquina(coordXf, coordYf));
 
         if (metros <= 0) {
             retorno.resultado = Resultado.ERROR_1;
@@ -136,7 +141,7 @@ public class Sistema implements ISistema {
             retorno.resultado = Resultado.ERROR_2;
             return retorno;
         }
-        if (puntoOrigen == null && puntoDestino == null) {
+        if (puntoOrigen == null || puntoDestino == null) {
             retorno.resultado = Resultado.ERROR_3;
             return retorno;
         }
@@ -163,13 +168,7 @@ public class Sistema implements ISistema {
 
     @Override
     public Retorno movilMasCercano(Double coordXi, Double coordYi) {
-        Retorno retorno = new Retorno(Resultado.OK);
-        Punto esquina = miMapa.buscarVertice(new Esquina(coordXi, coordYi)); //cualquier punto
-        if (esquina == null) {
-            retorno.resultado = Resultado.ERROR_1;
-            return retorno;
-        }
-        return miMapa.dijkstra_MasCercano(esquina, Grafo.enumPuntos.MOVIL);
+        return miMapa.dijkstra_MasCercano(new Esquina(coordXi, coordYi), Grafo.enumPuntos.MOVIL);
     }
 
     @Override

@@ -1,10 +1,12 @@
-package listas;
+package ArbolBinario;
 
 import listas.Direccion;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import listas.Direccion;
 import listas.ListaSE;
+import listas.ListaSEOrd;
 
 public class Usuario implements Comparable<Usuario> {
 
@@ -53,18 +55,30 @@ public class Usuario implements Comparable<Usuario> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj != null) {
-            if (getClass() == obj.getClass()) {
-
-                final Usuario usu = (Usuario) obj;
-                if (!Objects.equals(this.email, usu.email)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    public int hashCode() {
+        int hash = 7;
+        return hash;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Usuario other = (Usuario) obj;
+        if (!Objects.equals(this.email, other.email)) {
+            return false;
+        }
+        return true;
+    }
+
+
 
     @Override
     public int compareTo(Usuario o) {
@@ -72,7 +86,7 @@ public class Usuario implements Comparable<Usuario> {
     }
 
     public boolean ValidarEmail() {
-        String expresion = "^\\d{8}$";
+        String expresion = "\\w{3,}@\\w{3,}\\.\\w{2,}";
         return Pattern.matches(expresion, this.email);
     }
 

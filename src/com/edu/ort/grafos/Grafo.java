@@ -92,15 +92,7 @@ public class Grafo {
         }
         return -1;
     }
-
-//    private int buscarPos(double coordX, double coordY) {
-//        for (int i = 0; i < tope; i++) {
-//            if (vertices[i].estoyEnCoordenadas(coordX, coordY)) {
-//                return i;
-//            }
-//        }
-//        return -1;
-//    }
+    
     public boolean existeArista(Punto origen, Punto destino) {
         int posOrigen = buscarPos(origen);
         int posDestino = buscarPos(destino);
@@ -215,7 +207,10 @@ public class Grafo {
         Retorno retorno = new Retorno(Retorno.Resultado.OK);
         int posO = buscarPos(origen);
         int posD = buscarPos(destino);
-        
+         if (posO == -1 || posD == -1){
+            retorno.resultado=Retorno.Resultado.ERROR_1;
+            return retorno;
+        }
         // Armo los tres arreglos necesarios para realizar el algoritmo
         int[] dist = new int[tope];
         int[] ant = new int[tope];
@@ -349,8 +344,12 @@ public class Grafo {
     }
 
     public Retorno dijkstra_MasCercano(Punto origen, enumPuntos nombrePunto) {//pronto
-        int posO = buscarPos(origen);
         Retorno retorno = new Retorno(Retorno.Resultado.OK);
+        int posO = buscarPos(origen);
+         if (posO == -1){
+            retorno.resultado=Retorno.Resultado.ERROR_1;
+            return retorno;
+        }
         // Armo los tres arreglos necesarios para realizar el algoritmo
         int[] dist = new int[tope];
         int[] ant = new int[tope];

@@ -60,14 +60,16 @@ public abstract class Punto {
             return false;
         }
         final Punto other = (Punto) obj;
-        if (Double.doubleToLongBits(this.coordX) != Double.doubleToLongBits(other.coordX)) {
+        if (this.coordX != other.coordX) {
             return false;
         }
-        if (Double.doubleToLongBits(this.coordY) != Double.doubleToLongBits(other.coordY)) {
+        if (this.coordY != other.coordY) {
             return false;
         }
         return true;
     }
+
+   
     
    public abstract String getColor();
    public abstract String getTipo();
