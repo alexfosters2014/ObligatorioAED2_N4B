@@ -6,13 +6,6 @@ import uy.edu.ort.obli.Retorno;
 
 public class Grafo {
 
-    public enum enumPuntos {
-        DELIVERY,
-        MOVIL,
-        D,
-        ND
-    }
-
     private int tope;
     private int cant;
     private Punto[] vertices;
@@ -94,12 +87,12 @@ public class Grafo {
         }
         return -1;
     }
-    
+
     public boolean existeArista(Punto origen, Punto destino) {
         int posOrigen = buscarPos(origen);
         int posDestino = buscarPos(destino);
-            return matAdyNODir[posOrigen][posDestino].isExiste();
-        
+        return matAdyDir[posOrigen][posDestino].isExiste();
+
     }
 
     public boolean existeVertice(Punto origen) {
@@ -210,8 +203,8 @@ public class Grafo {
         Retorno retorno = new Retorno(Retorno.Resultado.OK);//nuevo comentario
         int posO = buscarPos(origen);
         int posD = buscarPos(destino);
-         if (posO == -1 || posD == -1){
-            retorno.resultado=Retorno.Resultado.ERROR_1;
+        if (posO == -1 || posD == -1) {
+            retorno.resultado = Retorno.Resultado.ERROR_1;
             return retorno;
         }
         // Armo los tres arreglos necesarios para realizar el algoritmo
@@ -249,29 +242,28 @@ public class Grafo {
             }
         }
 
-        int e=0;
+        int e = 0;
         boolean deliveryDisponible = false;
-        while (e<tope && !deliveryDisponible){
-            if (vertices[e] instanceof Delivery && vertices[e].estaLibre()){
-                deliveryDisponible=true;
+        while (e < tope && !deliveryDisponible) {
+            if (vertices[e] instanceof Delivery && vertices[e].estaLibre()) {
+                deliveryDisponible = true;
             }
-                e++;
+            e++;
         }
-       
-        if (!deliveryDisponible){
-            retorno.resultado=Retorno.Resultado.ERROR_2;
+
+        if (!deliveryDisponible) {
+            retorno.resultado = Retorno.Resultado.ERROR_2;
             return retorno;
         }
-        
+
         // evaluar si el camino fue encontrado=
-        
-        retorno.valorEntero=dist[posD];
+        retorno.valorEntero = dist[posD];
         retorno.valorString = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
         int a = posD;
         //iterno para guardar las coordenadas de cada punto del camino
         while (ant[a] > -1) {
             retorno.valorString = vertices[ant[a]].getCoordX() + ";" + vertices[ant[a]].getCoordY() + "|" + retorno.valorString;
-            a=ant[a];
+            a = ant[a];
         }
         return retorno;
     }
@@ -280,12 +272,12 @@ public class Grafo {
         Retorno retorno = new Retorno(Retorno.Resultado.OK);
         int posO = buscarPos(origen);
         int posD = buscarPos(destino);
-        
-        if (posO == -1 || posD == -1){
-            retorno.resultado=Retorno.Resultado.ERROR_1;
+
+        if (posO == -1 || posD == -1) {
+            retorno.resultado = Retorno.Resultado.ERROR_1;
             return retorno;
         }
-        
+
         // Armo los tres arreglos necesarios para realizar el algoritmo
         int[] dist = new int[tope];
         int[] ant = new int[tope];
@@ -320,40 +312,39 @@ public class Grafo {
                 }
             }
         }
-       
-        int e=0;
+
+        int e = 0;
         boolean movilDisponible = false;
-        while (e<tope && !movilDisponible){
-            if (vertices[e] instanceof Movil && !vertices[e].estaLibre()){
-                movilDisponible=true;
+        while (e < tope && !movilDisponible) {
+            if (vertices[e] instanceof Movil && !vertices[e].estaLibre()) {
+                movilDisponible = true;
             }
-                e++;
+            e++;
         }
-       
-        if (!movilDisponible){
-            retorno.resultado=Retorno.Resultado.ERROR_2;
+
+        if (!movilDisponible) {
+            retorno.resultado = Retorno.Resultado.ERROR_2;
             return retorno;
         }
-        
+
         // evaluar si el camino fue encontrado=
-        
-        retorno.valorEntero=dist[posD];
+        retorno.valorEntero = dist[posD];
         retorno.valorString = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
         retorno.valorString = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
         int a = posD;
         //iterno para guardar las coordenadas de cada punto del camino
         while (ant[a] > -1) {
             retorno.valorString = vertices[ant[a]].getCoordX() + ";" + vertices[ant[a]].getCoordY() + "|" + retorno.valorString;
-            a=ant[a];
+            a = ant[a];
         }
         return retorno;
     }
 
-    public Retorno dijkstra_MasCercano(Punto origen, enumPuntos nombrePunto) {//pronto
+    public Retorno dijkstra_DeliveryMasCercano(Punto origen) {//pronto
         Retorno retorno = new Retorno(Retorno.Resultado.OK);
         int posO = buscarPos(origen);
-         if (posO == -1){
-            retorno.resultado=Retorno.Resultado.ERROR_1;
+        if (posO == -1) {
+            retorno.resultado = Retorno.Resultado.ERROR_1;
             return retorno;
         }
         // Armo los tres arreglos necesarios para realizar el algoritmo
@@ -381,57 +372,83 @@ public class Grafo {
             // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
             // hasta ahora descubierta
 
-            if (nombrePunto == nombrePunto.DELIVERY) {
-                //para delivery
-                for (int j = 0; j < tope; j++) {
-                    if (!vis[j] && matAdyDir[posMin][j].isExiste()) {
-                        int sumaAcumulada = dist[posMin] + 1;
-                        if (sumaAcumulada < dist[j]) {
-                            dist[j] = sumaAcumulada;
-                            ant[j] = posMin;
-                        }
-                    }
-                }
-            } else {
-                //para Movil
-                for (int j = 0; j < tope; j++) {
-                    if (!vis[j] && matAdyNODir[posMin][j].isExiste()) {
-                        int sumaAcumulada = dist[posMin] + matAdyNODir[posMin][j].getMetros();
-                        if (sumaAcumulada < dist[j]) {
-                            dist[j] = sumaAcumulada;
-                            ant[j] = posMin;
-                        }
+            //para delivery
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyNODir[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] + 1;
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
                     }
                 }
             }
         }
+        int posMinDel = -1, valorMinDel = Integer.MAX_VALUE;
+        for (int i = 0; i < tope; i++) {
+            if (vertices[i] instanceof Delivery) {
+                Delivery delivery = (Delivery) vertices[i];
+                if (delivery.estaLibre() && dist[i] < valorMinDel) {
+                    posMinDel = i;
+                    valorMinDel = dist[i];
+                }
+            }
+        }
 
-        // ************** operaciones con Delivery ********************
-        if (nombrePunto == nombrePunto.DELIVERY) {
+        if (posMinDel == -1) {
+            retorno.resultado = Retorno.Resultado.ERROR_2;
+            return retorno;
+        }
+        //seteo a ocupado el deliver
+        Delivery delivery = (Delivery) vertices[posMinDel];
+        delivery.setOcupado(true);
+        retorno.valorEntero = valorMinDel;
+        retorno.valorString = delivery.getCoordX() + ";" + delivery.getCoordY();
+        return retorno;
 
-            int posMinDel = -1, valorMinDel = Integer.MAX_VALUE;
+    }
+
+    public Retorno dijkstra_MovilMasCercano(Punto origen) {//pronto
+        Retorno retorno = new Retorno(Retorno.Resultado.OK);
+        int posO = buscarPos(origen);
+        if (posO == -1) {
+            retorno.resultado = Retorno.Resultado.ERROR_1;
+            return retorno;
+        }
+        // Armo los tres arreglos necesarios para realizar el algoritmo
+        int[] dist = new int[tope];
+        int[] ant = new int[tope];
+        boolean[] vis = new boolean[tope];
+        // inicializo los vectores
+        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++)
+			;
+        // asigno al destino como el primer nodo a ser recorrido
+        dist[posO] = 0;
+        // comienzo proceso reiterativo (V veces) para ir procesando a los vértices de a
+        // uno
+        for (int k = 0; k < cant; k++) {
+            int posMin = -1, min = Integer.MAX_VALUE;
+            // hallo al vértice no visitado de menor distancia al origen
             for (int i = 0; i < tope; i++) {
-                if (vertices[i] instanceof Delivery) {
-                    Delivery delivery = (Delivery) vertices[i];
-                    if (delivery.estaLibre() && dist[i] < valorMinDel) {
-                        posMinDel = i;
-                        valorMinDel = dist[i];
+                if (!vis[i] && dist[i] < min) {
+                    posMin = i;
+                    min = dist[i];
+                }
+            }
+            // visito al elemento a ser procesado
+            vis[posMin] = true;
+            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
+            // hasta ahora descubierta
+
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyDir[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] + matAdyDir[posMin][j].getMetros();
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
                     }
                 }
             }
-
-//            if (valorMinDel == Integer.MAX_VALUE) {
-//                retorno.resultado = Retorno.Resultado.ERROR_2;
-//                return retorno;
-//            }
-            //seteo a ocupado el deliver
-            Delivery delivery = (Delivery) vertices[posMinDel];
-            delivery.setOcupado(false);
-            retorno.valorEntero = valorMinDel;
-            retorno.valorString = delivery.getCoordX() + ";" + delivery.getCoordY();
-            return retorno;
-
-        } else {
+        }
             // ************** operaciones con MOVIL ********************
             int posMinMovil = -1, valorMinMovil = Integer.MAX_VALUE;
             for (int i = 0; i < tope; i++) {
@@ -444,25 +461,24 @@ public class Grafo {
                 }
             }
 
-            if (valorMinMovil == Integer.MAX_VALUE) {
+            if (posMinMovil == -1) {
                 retorno.resultado = Retorno.Resultado.ERROR_2;
                 return retorno;
             }
             //seteo a ocupado el deliver
             Movil movil = (Movil) vertices[posMinMovil];
-            movil.setOcupado(false);
+            movil.setOcupado(true);
             retorno.valorEntero = valorMinMovil;
             return retorno;
-        }
     }
-    
-    public String urlPuntos(){
-        String url="";
-        
+
+    public String urlPuntos() {
+        String url = "";
+
         for (int i = 0; i < tope; i++) {
-            if (vertices[i] instanceof Delivery || vertices[i] instanceof Movil){
-            Punto punto = vertices[i];
-            url+="&markers=color:"+ punto.getColor() + "%7Clabel:"+ punto.getTipo() +"%7C"+ punto.getCoordX() +","+ punto.getCoordY();
+            if (vertices[i] instanceof Delivery || vertices[i] instanceof Movil) {
+                Punto punto = vertices[i];
+                url += "&markers=color:" + punto.getColor() + "%7Clabel:" + punto.getTipo() + "%7C" + punto.getCoordX() + "," + punto.getCoordY();
             }
         }
         return url;

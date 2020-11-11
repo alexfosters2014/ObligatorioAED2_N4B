@@ -43,7 +43,7 @@ public class Sistema implements ISistema {
     public Retorno registrarUsuario(String email, String nombre, String password) {
         Retorno retorno = new Retorno(Resultado.OK);
 
-        Usuario usuario = new Usuario(nombre, email.toLowerCase(), password);
+        Usuario usuario = new Usuario(nombre, email, password);
 
         if (!usuario.ValidarEmail()) {
             retorno.resultado = Resultado.ERROR_1;
@@ -62,7 +62,7 @@ public class Sistema implements ISistema {
     public Retorno buscarUsuario(String email) {
         Retorno retorno = new Retorno(Resultado.OK);
 
-        Usuario usuario = new Usuario(email.toLowerCase());
+        Usuario usuario = new Usuario(email);
 
         if (!usuario.ValidarEmail()) {
             retorno.resultado = Resultado.ERROR_1;
@@ -84,7 +84,7 @@ public class Sistema implements ISistema {
         Retorno retorno = new Retorno(Resultado.OK);
         newString listado = new newString();
         usuarios.listarAsc(listado);
-        retorno.valorString = listado.dato;
+        retorno.valorString = listado.dato.substring(0,listado.dato.length()-1);
         return retorno;
     }
 
@@ -168,12 +168,12 @@ public class Sistema implements ISistema {
 
     @Override
     public Retorno movilMasCercano(Double coordXi, Double coordYi) {
-        return miMapa.dijkstra_MasCercano(new Esquina(coordXi, coordYi), Grafo.enumPuntos.MOVIL);
+        return miMapa.dijkstra_MovilMasCercano(new Esquina(coordXi, coordYi));
     }
 
     @Override
     public Retorno deliveryMasCercano(Double coordXi, Double coordYi) {//haciendo
-        return miMapa.dijkstra_MasCercano(new Esquina(coordXi, coordYi), Grafo.enumPuntos.DELIVERY);
+        return miMapa.dijkstra_DeliveryMasCercano(new Esquina(coordXi, coordYi));
     }
 
     @Override
