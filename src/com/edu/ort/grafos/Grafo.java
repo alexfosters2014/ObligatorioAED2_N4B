@@ -316,7 +316,7 @@ public class Grafo {
         int e = 0;
         boolean movilDisponible = false;
         while (e < tope && !movilDisponible) {
-            if (vertices[e] instanceof Movil && !vertices[e].estaLibre()) {
+            if (vertices[e] instanceof Movil && vertices[e].estaLibre()) {
                 movilDisponible = true;
             }
             e++;
