@@ -254,10 +254,7 @@ public class Grafo {
                         case DELIVERY_CERCANO:
                             sumaAcumulada = dist[posMin] + 1;
                             break;
-                        case MOVIL_MINIMO:
-                            sumaAcumulada = dist[posMin] + matAdySelector[posMin][j].getMetros();
-                            break;
-                        case MOVIL_CERCANO:
+                        case MOVIL_MINIMO: case MOVIL_CERCANO:
                             sumaAcumulada = dist[posMin] + matAdySelector[posMin][j].getMetros();
                             break;
                     }
