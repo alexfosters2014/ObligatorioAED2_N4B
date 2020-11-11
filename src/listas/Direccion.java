@@ -1,14 +1,15 @@
 package listas;
+
 import com.edu.ort.grafos.Punto;
 import java.util.Objects;
 
-public class Direccion implements Comparable<Direccion>{
+public class Direccion implements Comparable<Direccion> {
 
     private Punto punto;
     private int repeticiones;
 
     public Direccion(Punto punto) {
-        this.punto=punto;
+        this.punto = punto;
         this.repeticiones = 1;
     }
 
@@ -19,9 +20,11 @@ public class Direccion implements Comparable<Direccion>{
     public void setPunto(Punto punto) {
         this.punto = punto;
     }
-    public void aumentarRepeticiones(){
+
+    public void aumentarRepeticiones() {
         repeticiones++;
     }
+
     public int getRepeticiones() {
         return repeticiones;
     }
@@ -38,28 +41,20 @@ public class Direccion implements Comparable<Direccion>{
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
+
+        if (obj != null) {
+            final Direccion other = (Direccion) obj;
+            if (other.getPunto().getCoordX() == this.getPunto().getCoordX()
+                    && other.getPunto().getCoordY() == this.getPunto().getCoordY()) {
+                return true;
+            }
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Direccion other = (Direccion) obj;
-        if (!(other.getPunto().getCoordX() == this.getPunto().getCoordX()) && 
-             !(other.getPunto().getCoordY()== this.getPunto().getCoordY()) ) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     @Override
     public int compareTo(Direccion o) {
-        return o.getRepeticiones() - this.getRepeticiones();
+        return (o.getRepeticiones() - this.getRepeticiones());
     }
-
-
 
 }

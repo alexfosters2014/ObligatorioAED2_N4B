@@ -187,13 +187,14 @@ public class Sistema implements ISistema {
         Usuario usuario=usuarios.buscar(new Usuario(email), new Entero());
         if (retorno.resultado == Resultado.OK && usuario != null){
            Direccion direccion = usuario.getDirecciones().recuperar(new Direccion(destino));
+           
            if (direccion != null){
                usuario.getDirecciones().borrar(direccion);
                direccion.aumentarRepeticiones();
                usuario.getDirecciones().insertarOrd(direccion);
                
            }else{
-               usuario.getDirecciones().insertarOrd(direccion);
+               usuario.getDirecciones().insertarOrd(new Direccion(destino));
            }
         }
         return retorno;
