@@ -6,6 +6,18 @@ import uy.edu.ort.obli.Retorno;
 
 public class Grafo {
 
+    public enum tipoControl {
+        DELIVERY,
+        MOVIL
+    }
+
+    public enum tipoDijkstra {
+        MOVIL_MINIMO,
+        MOVIL_CERCANO,
+        DELIVERY_MINIMO,
+        DELIVERY_CERCANO
+
+    }
     private int tope;
     private int cant;
     private Punto[] vertices;
@@ -199,15 +211,16 @@ public class Grafo {
         }
     }
 
-    public Retorno dijkstra_Delivery_ND(Punto origen, Punto destino) {
-        Retorno retorno = new Retorno(Retorno.Resultado.OK);//nuevo comentario
+    public ValorDijkstra dijkstra(Punto origen, tipoControl tControl, tipoDijkstra tDijkstra) {
+        ValorDijkstra vDijkstra;
         int posO = buscarPos(origen);
-        int posD = buscarPos(destino);
-        if (posO == -1 || posD == -1) {
-            retorno.resultado = Retorno.Resultado.ERROR_1;
-            return retorno;
-        }
         // Armo los tres arreglos necesarios para realizar el algoritmo
+        Arista[][] matAdySelector;
+        if (tControl.equals(tipoControl.DELIVERY)) {
+            matAdySelector = matAdyNODir;
+        } else {
+            matAdySelector = matAdyDir;
+        }
         int[] dist = new int[tope];
         int[] ant = new int[tope];
         boolean[] vis = new boolean[tope];
@@ -232,8 +245,19 @@ public class Grafo {
             // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
             // hasta ahora descubierta
             for (int j = 0; j < tope; j++) {
-                if (!vis[j] && matAdyNODir[posMin][j].isExiste()) {
-                    int sumaAcumulada = dist[posMin] + matAdyNODir[posMin][j].getMinutos();
+                if (!vis[j] && matAdySelector[posMin][j].isExiste()) {
+                      int sumaAcumulada=0;
+                    switch (tDijkstra) {
+                        case DELIVERY_MINIMO:
+                            sumaAcumulada = dist[posMin] + matAdySelector[posMin][j].getMinutos();
+                            break;
+                        case DELIVERY_CERCANO:
+                            sumaAcumulada = dist[posMin] + 1;
+                            break;
+                        case MOVIL_MINIMO: case MOVIL_CERCANO:
+                            sumaAcumulada = dist[posMin] + matAdySelector[posMin][j].getMetros();
+                            break;
+                    }
                     if (sumaAcumulada < dist[j]) {
                         dist[j] = sumaAcumulada;
                         ant[j] = posMin;
@@ -241,7 +265,24 @@ public class Grafo {
                 }
             }
         }
+        vDijkstra = new ValorDijkstra(dist, ant);
+        return vDijkstra;
+    }
 
+    public Retorno dijkstra_Delivery_ND(Punto origen, Punto destino) {
+        ValorDijkstra vDijkstra;
+        Retorno retorno = new Retorno(Retorno.Resultado.OK);//nuevo comentario
+        int posO = buscarPos(origen);
+        int posD = buscarPos(destino);
+        if (posO == -1 || posD == -1) {
+            retorno.resultado = Retorno.Resultado.ERROR_1;
+            return retorno;
+        }
+        // Armo los tres arreglos necesarios para realizar el algoritmo
+        vDijkstra= dijkstra(origen, tipoControl.DELIVERY, tipoDijkstra.DELIVERY_MINIMO);
+        int[] dist = vDijkstra.dist;
+        int[] ant = vDijkstra.ant;
+       
         int e = 0;
         boolean deliveryDisponible = false;
         while (e < tope && !deliveryDisponible) {
@@ -269,6 +310,7 @@ public class Grafo {
     }
 
     public Retorno dijkstra_Movil_D(Punto origen, Punto destino) {
+          ValorDijkstra vDijkstra;
         Retorno retorno = new Retorno(Retorno.Resultado.OK);
         int posO = buscarPos(origen);
         int posD = buscarPos(destino);
@@ -277,42 +319,11 @@ public class Grafo {
             retorno.resultado = Retorno.Resultado.ERROR_1;
             return retorno;
         }
-
+          vDijkstra = dijkstra(origen, tipoControl.MOVIL, tipoDijkstra.MOVIL_MINIMO);
         // Armo los tres arreglos necesarios para realizar el algoritmo
-        int[] dist = new int[tope];
-        int[] ant = new int[tope];
-        boolean[] vis = new boolean[tope];
-        // inicializo los vectores
-        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++)
-			;
-        // asigno al destino como el primer nodo a ser recorrido
-        dist[posO] = 0;
-        // comienzo proceso reiterativo (V veces) para ir procesando a los vértices de a
-        // uno
-        for (int k = 0; k < cant; k++) {
-            int posMin = -1, min = Integer.MAX_VALUE;
-            // hallo al vértice no visitado de menor distancia al origen
-            for (int i = 0; i < tope; i++) {
-                if (!vis[i] && dist[i] < min) {
-                    posMin = i;
-                    min = dist[i];
-                }
-            }
-            // visito al elemento a ser procesado
-            vis[posMin] = true;
-            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
-            // hasta ahora descubierta
-            for (int j = 0; j < tope; j++) {
-                if (!vis[j] && matAdyDir[posMin][j].isExiste()) {
-                    int sumaAcumulada = dist[posMin] + matAdyDir[posMin][j].getMetros();
-                    if (sumaAcumulada < dist[j]) {
-                        dist[j] = sumaAcumulada;
-                        ant[j] = posMin;
-                    }
-                }
-            }
-        }
-
+        int[] dist = vDijkstra.dist;
+        int[] ant = vDijkstra.ant;
+        
         int e = 0;
         boolean movilDisponible = false;
         while (e < tope && !movilDisponible) {
@@ -340,49 +351,19 @@ public class Grafo {
         return retorno;
     }
 
-    public Retorno dijkstra_DeliveryMasCercano(Punto origen) {//pronto
+    public Retorno dijkstra_DeliveryMasCercano(Punto origen) {
+        ValorDijkstra vDijkstra;
         Retorno retorno = new Retorno(Retorno.Resultado.OK);
         int posO = buscarPos(origen);
         if (posO == -1) {
             retorno.resultado = Retorno.Resultado.ERROR_1;
             return retorno;
         }
+        vDijkstra = dijkstra(origen, tipoControl.DELIVERY, tipoDijkstra.DELIVERY_CERCANO);
         // Armo los tres arreglos necesarios para realizar el algoritmo
-        int[] dist = new int[tope];
-        int[] ant = new int[tope];
-        boolean[] vis = new boolean[tope];
-        // inicializo los vectores
-        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++)
-			;
-        // asigno al destino como el primer nodo a ser recorrido
-        dist[posO] = 0;
-        // comienzo proceso reiterativo (V veces) para ir procesando a los vértices de a
-        // uno
-        for (int k = 0; k < cant; k++) {
-            int posMin = -1, min = Integer.MAX_VALUE;
-            // hallo al vértice no visitado de menor distancia al origen
-            for (int i = 0; i < tope; i++) {
-                if (!vis[i] && dist[i] < min) {
-                    posMin = i;
-                    min = dist[i];
-                }
-            }
-            // visito al elemento a ser procesado
-            vis[posMin] = true;
-            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
-            // hasta ahora descubierta
-
-            //para delivery
-            for (int j = 0; j < tope; j++) {
-                if (!vis[j] && matAdyNODir[posMin][j].isExiste()) {
-                    int sumaAcumulada = dist[posMin] + 1;
-                    if (sumaAcumulada < dist[j]) {
-                        dist[j] = sumaAcumulada;
-                        ant[j] = posMin;
-                    }
-                }
-            }
-        }
+        int[] dist = vDijkstra.dist;
+        int[] ant = vDijkstra.ant;
+        
         int posMinDel = -1, valorMinDel = Integer.MAX_VALUE;
         for (int i = 0; i < tope; i++) {
             if (vertices[i] instanceof Delivery) {
@@ -407,69 +388,40 @@ public class Grafo {
 
     }
 
-    public Retorno dijkstra_MovilMasCercano(Punto origen) {//pronto
+    public Retorno dijkstra_MovilMasCercano(Punto origen) {
+        ValorDijkstra vDijkstra;
         Retorno retorno = new Retorno(Retorno.Resultado.OK);
         int posO = buscarPos(origen);
         if (posO == -1) {
             retorno.resultado = Retorno.Resultado.ERROR_1;
             return retorno;
         }
+        vDijkstra = dijkstra(origen, tipoControl.MOVIL, tipoDijkstra.MOVIL_CERCANO);
         // Armo los tres arreglos necesarios para realizar el algoritmo
-        int[] dist = new int[tope];
-        int[] ant = new int[tope];
-        boolean[] vis = new boolean[tope];
-        // inicializo los vectores
-        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++)
-			;
-        // asigno al destino como el primer nodo a ser recorrido
-        dist[posO] = 0;
-        // comienzo proceso reiterativo (V veces) para ir procesando a los vértices de a
-        // uno
-        for (int k = 0; k < cant; k++) {
-            int posMin = -1, min = Integer.MAX_VALUE;
-            // hallo al vértice no visitado de menor distancia al origen
-            for (int i = 0; i < tope; i++) {
-                if (!vis[i] && dist[i] < min) {
-                    posMin = i;
-                    min = dist[i];
-                }
-            }
-            // visito al elemento a ser procesado
-            vis[posMin] = true;
-            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
-            // hasta ahora descubierta
-
-            for (int j = 0; j < tope; j++) {
-                if (!vis[j] && matAdyDir[posMin][j].isExiste()) {
-                    int sumaAcumulada = dist[posMin] + matAdyDir[posMin][j].getMetros();
-                    if (sumaAcumulada < dist[j]) {
-                        dist[j] = sumaAcumulada;
-                        ant[j] = posMin;
-                    }
+        int[] dist = vDijkstra.dist;
+        int[] ant = vDijkstra.ant;
+        
+        // ************** operaciones con MOVIL ********************
+        int posMinMovil = -1, valorMinMovil = Integer.MAX_VALUE;
+        for (int i = 0; i < tope; i++) {
+            if (vertices[i] instanceof Movil) {
+                Movil movil = (Movil) vertices[i];
+                if (movil.estaLibre() && dist[i] < valorMinMovil) {
+                    posMinMovil = i;
+                    valorMinMovil = dist[i];
                 }
             }
         }
-            // ************** operaciones con MOVIL ********************
-            int posMinMovil = -1, valorMinMovil = Integer.MAX_VALUE;
-            for (int i = 0; i < tope; i++) {
-                if (vertices[i] instanceof Movil) {
-                    Movil movil = (Movil) vertices[i];
-                    if (movil.estaLibre() && dist[i] < valorMinMovil) {
-                        posMinMovil = i;
-                        valorMinMovil = dist[i];
-                    }
-                }
-            }
 
-            if (posMinMovil == -1) {
-                retorno.resultado = Retorno.Resultado.ERROR_2;
-                return retorno;
-            }
-            //seteo a ocupado el deliver
-            Movil movil = (Movil) vertices[posMinMovil];
-            movil.setOcupado(true);
-            retorno.valorEntero = valorMinMovil;
+        if (posMinMovil == -1) {
+            retorno.resultado = Retorno.Resultado.ERROR_2;
             return retorno;
+        }
+        //seteo a ocupado el deliver
+        Movil movil = (Movil) vertices[posMinMovil];
+        movil.setOcupado(true);
+        retorno.valorEntero = valorMinMovil;
+        return retorno;
     }
 
     public String urlPuntos() {
