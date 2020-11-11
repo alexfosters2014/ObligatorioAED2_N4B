@@ -157,21 +157,21 @@ public class ListaSE<T> implements ILista<T> {
 		return largo;
 	}
 
-//	@Override
-//	public void listar() {
-//		System.out.print("[");
-//		if (inicio != null) {
-//			System.out.print(inicio.getDato());
-//			if (inicio.getSig() != null) {
-//				NodoLista<T> aux = inicio;
-//				while (aux.getSig() != null) {
-//					System.out.print(", " + aux.getSig().getDato());
-//					aux = aux.getSig();
-//				}
-//			}
-//		}
-//		System.out.println("]");
-//	}
+	@Override
+	public void listar() {
+		System.out.print("[");
+		if (inicio != null) {
+			System.out.print(inicio.getDato());
+			if (inicio.getSig() != null) {
+				NodoLista<T> aux = inicio;
+				while (aux.getSig() != null) {
+					System.out.print(", " + aux.getSig().getDato());
+					aux = aux.getSig();
+				}
+			}
+		}
+		System.out.println("]");
+	}
 
 	@Override
 	public void vaciar() {

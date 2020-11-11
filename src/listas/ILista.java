@@ -100,4 +100,6 @@ public interface ILista<T> extends Iterable<T> {
 	 * Pre:
 	 */
 	public void vaciar();
+        public void listar();
+        
 }

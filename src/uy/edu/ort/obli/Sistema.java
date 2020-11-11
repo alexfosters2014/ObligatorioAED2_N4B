@@ -16,8 +16,8 @@ import uy.edu.ort.obli.Retorno.Resultado;
 
 public class Sistema implements ISistema {
 
-    ABB<Usuario> usuarios;
-    Grafo miMapa;
+    public ABB<Usuario> usuarios;
+    public Grafo miMapa;
 
     @Override
     public Retorno inicializarSistema(int maxPuntos) {

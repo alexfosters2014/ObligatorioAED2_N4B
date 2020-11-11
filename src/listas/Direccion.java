@@ -57,4 +57,9 @@ public class Direccion implements Comparable<Direccion> {
         return (o.getRepeticiones() - this.getRepeticiones());
     }
 
+    @Override
+    public String toString() {
+        return "Direccion{" + "punto=" + punto + ", repeticiones=" + repeticiones + '}';
+    }
+
 }
