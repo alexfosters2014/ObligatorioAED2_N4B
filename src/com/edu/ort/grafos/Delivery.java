@@ -22,9 +22,11 @@ public class Delivery extends Punto{
 
     @Override
     public String getColor() {
-    if (estaOcupado())
+     if (isOcupado()){
             return "red";
+        }else{
        return "green";
+        }
     }
 
     @Override
